@@ -70,7 +70,7 @@ namespace Auth.Service.Controllers
             //The token details are specified using the SecurityTokenDescriptor
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddSeconds(30),
                 SigningCredentials = creds
             };
 
