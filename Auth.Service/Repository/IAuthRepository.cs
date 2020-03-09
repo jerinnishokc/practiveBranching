@@ -10,7 +10,7 @@ namespace Auth.Service.Repository
     {
         User Register(User user, string password);
 
-        User Login(string username, string password);
+        User Login(string username, string password, string role);
 
         bool UserExists(string username, string role);
     }

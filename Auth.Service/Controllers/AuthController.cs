@@ -50,7 +50,7 @@ namespace Auth.Service.Controllers
         [HttpPost("login")]
         public IActionResult Login(UserForLoginDto userForLoginDto)
         {
-            var userFromRepo = _repo.Login(userForLoginDto.username.ToLower(), userForLoginDto.password);
+            var userFromRepo = _repo.Login(userForLoginDto.username.ToLower(), userForLoginDto.password, userForLoginDto.role.ToLower());
 
             if (userFromRepo == null)
                 return Unauthorized();
@@ -70,7 +70,7 @@ namespace Auth.Service.Controllers
             //The token details are specified using the SecurityTokenDescriptor
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddMinutes(5),
                 SigningCredentials = creds
             };
 
@@ -81,9 +81,11 @@ namespace Auth.Service.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return Ok(new {
-                userFromRepo.Role,
+                username = userFromRepo.Username,
+                role = userFromRepo.Role,
                 //The token is writen into the request using the token handler
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                tokenExpirationDate = tokenDescriptor.Expires
             });
         }
     }

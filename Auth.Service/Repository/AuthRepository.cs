@@ -16,9 +16,9 @@ namespace Auth.Service.Repository
             _context = context;
         }
 
-        public User Login(string username, string password)
+        public User Login(string username, string password, string role)
         {
-            var user = _context.User.FirstOrDefault(x => x.Username == username.ToLower());
+            var user = _context.User.FirstOrDefault(x => x.Username == username && x.Role == role);
 
             if (user == null)
                 return null;

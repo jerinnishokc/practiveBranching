@@ -11,6 +11,6 @@ namespace Auth.Service.DTOs
 
         public string password { get; set; }
 
-        //public string role { get; set; }
+        public string role { get; set; }
     }
 }
