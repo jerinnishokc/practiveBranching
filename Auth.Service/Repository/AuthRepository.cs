@@ -9,22 +9,31 @@ namespace Auth.Service.Repository
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly DataContext _context;
+        //private readonly DataContext _context;
+        private readonly IDocumentDBRepository<User> _documentDBContext;
 
-        public AuthRepository(DataContext context)
+        //public AuthRepository(DataContext context, IDocumentDBRepository<User> documentDBContext)
+        //{
+        //    _context = context;
+        //    _documentDBContext = documentDBContext;
+        //}
+        public AuthRepository(IDocumentDBRepository<User> documentDBContext)
         {
-            _context = context;
+            _documentDBContext = documentDBContext;
         }
 
-        public User Login(string username, string password, string role)
+        public async Task<User> Login(string username, string password, string role)
         {
-            var user = _context.User.FirstOrDefault(x => x.Username == username && x.Role == role);
+            //var user = _context.User.FirstOrDefault(x => x.Username == username && x.Role == role);
+
+            User user = await _documentDBContext.GetItemAsync(username);
 
             if (user == null)
                 return null;
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return null;
+
             return user;
         }
 
@@ -50,8 +59,9 @@ namespace Auth.Service.Repository
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _context.User.Add(user);
-            _context.SaveChanges();
+            //_context.User.Add(user);
+            //_context.SaveChanges();
+            _documentDBContext.CreateItemAsync(user);
 
             return user;
         }
@@ -67,7 +77,9 @@ namespace Auth.Service.Repository
 
         public bool UserExists(string username, string role)
         {
-            if (_context.User.Any(x => x.Username == username && x.Role == role))
+            //if (_context.User.Any(x => x.Username == username && x.Role == role))
+            //    return true;
+            if (_documentDBContext.GetItemsAsync(x => x.Username == username && x.Role == role).Result.ToList().Count > 0)
                 return true;
 
             return false;

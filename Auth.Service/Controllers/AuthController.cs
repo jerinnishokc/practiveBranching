@@ -48,9 +48,9 @@ namespace Auth.Service.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(UserForLoginDto userForLoginDto)
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var userFromRepo = _repo.Login(userForLoginDto.username.ToLower(), userForLoginDto.password, userForLoginDto.role.ToLower());
+            User userFromRepo = await _repo.Login(userForLoginDto.username.ToLower(), userForLoginDto.password, userForLoginDto.role.ToLower());
 
             if (userFromRepo == null)
                 return Unauthorized();
