@@ -26,13 +26,14 @@ namespace Auth.Service.Repository
         {
             //var user = _context.User.FirstOrDefault(x => x.Username == username && x.Role == role);
 
-            User user = await _documentDBContext.GetItemAsync(username);
+            //User user = await _documentDBContext.GetItemAsync(username);
+            User user = await _documentDBContext.GetItemsAsync(x => x.Username == username && x.Role == role);
 
             if (user == null)
                 return null;
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
+                return null; 
 
             return user;
         }
@@ -79,7 +80,7 @@ namespace Auth.Service.Repository
         {
             //if (_context.User.Any(x => x.Username == username && x.Role == role))
             //    return true;
-            if (_documentDBContext.GetItemsAsync(x => x.Username == username && x.Role == role).Result.ToList().Count > 0)
+            if (_documentDBContext.GetItemsAsync(x => x.Username == username && x.Role == role).Result != null)
                 return true;
 
             return false;

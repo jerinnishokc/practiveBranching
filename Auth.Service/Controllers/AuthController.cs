@@ -81,6 +81,7 @@ namespace Auth.Service.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return Ok(new {
+                id = userFromRepo.Id,
                 username = userFromRepo.Username,
                 role = userFromRepo.Role,
                 //The token is writen into the request using the token handler

@@ -48,7 +48,7 @@ namespace Auth.Service.Repository
             }
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T> GetItemsAsync(Expression<Func<T, bool>> predicate)
         {
             IDocumentQuery<T> query = client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
@@ -62,7 +62,10 @@ namespace Auth.Service.Repository
                 results.AddRange(await query.ExecuteNextAsync<T>());
             }
 
-            return results;
+            if(results.Count > 0)
+                return results[0];
+
+            return null;
         }
 
         public async Task<Document> CreateItemAsync(T item)
