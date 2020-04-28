@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.Service.DataAccessLayer;
+using Auth.Service.DTOs;
 using Auth.Service.Model;
 
 namespace Auth.Service.Repository
 {
+    public class UserDetails {
+        public string id { get; set; }
+        public string username { get; set; }
+        public string role { get; set; }
+        public string[] events { get; set; }
+        public int eventsCount { get { return events != null ? events.Count() : 0; } }
+        public string feedbackStatus { get; set; }               
+    }
     public class AuthRepository : IAuthRepository
     {
         //private readonly DataContext _context;
@@ -27,7 +36,9 @@ namespace Auth.Service.Repository
             //var user = _context.User.FirstOrDefault(x => x.Username == username && x.Role == role);
 
             //User user = await _documentDBContext.GetItemAsync(username);
-            User user = await _documentDBContext.GetItemsAsync(x => x.Username == username && x.Role == role);
+            var userResult = await _documentDBContext.GetItemsAsync(x => x.Username == username && x.Role == role);
+
+            User user = userResult.ToList()[0];
 
             if (user == null)
                 return null;
@@ -84,6 +95,40 @@ namespace Auth.Service.Repository
                 return true;
 
             return false;
+        }
+
+        public async Task<UserForUpdateDto> UpdateUserDetails(UserForUpdateDto updatedUser) {
+            var user = _documentDBContext.GetItemsAsync(x => x.id == updatedUser.id).Result.ToList()[0];
+            if ( user != null) {
+                user.Events = updatedUser.Events;
+            }
+            await _documentDBContext.UpdateItemAsync(updatedUser.id, user);
+            return updatedUser;
+        }
+
+        public async Task<List<UserDetails>> GetAllUsers() {
+            var users = await _documentDBContext.GetItemsAsync(x => x.id != null);
+            
+            List<UserDetails> userDetail = new List<UserDetails>();
+
+
+            if (users == null)
+                return null;
+
+            users.ToList().ForEach(x => {
+                UserDetails userObj = new UserDetails()
+                {
+                    id = x.id,
+                    username = x.Username,
+                    role = x.Role,
+                    events = x.Events,
+                    feedbackStatus = x.FeedbackStatus
+                };
+
+                userDetail.Add(userObj);
+            });
+
+            return userDetail;
         }
     }
 }

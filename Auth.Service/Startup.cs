@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Auth.Service.Model;
+using System.IO;
 
 namespace Auth.Service
 {
@@ -70,11 +71,26 @@ namespace Auth.Service
             {
                 app.UseHsts();
             }
-
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.Use(async (context,next)=> {
+                await next();
+
+                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value)) {
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+
+            app.UseDefaultFiles();
+            
+            app.UseStaticFiles();
+            
+            
             app.UseAuthentication();
             //app.UseHttpsRedirection();
             app.UseMvc();
+
+            
         }
     }
 }

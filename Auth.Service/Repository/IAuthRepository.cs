@@ -1,4 +1,5 @@
-﻿using Auth.Service.Model;
+﻿using Auth.Service.DTOs;
+using Auth.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,9 @@ namespace Auth.Service.Repository
         Task<User> Login(string username, string password, string role);
 
         bool UserExists(string username, string role);
+
+        Task<UserForUpdateDto> UpdateUserDetails(UserForUpdateDto updatedUser);
+
+        Task<List<UserDetails>> GetAllUsers();
     }
 }

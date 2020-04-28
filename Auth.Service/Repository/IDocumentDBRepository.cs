@@ -11,7 +11,7 @@ namespace Auth.Service.Repository
         Task<Document> CreateItemAsync(T item);
         Task DeleteItemAsync(string id);
         Task<T> GetItemAsync(string id);
-        Task<T> GetItemsAsync(Expression<Func<T, bool>> predicate);
+        Task<List<T>> GetItemsAsync(Expression<Func<T, bool>> predicate);
         Task<Document> UpdateItemAsync(string id, T item);
     }
 }

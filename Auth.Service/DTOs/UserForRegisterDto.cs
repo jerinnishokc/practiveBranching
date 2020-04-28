@@ -17,5 +17,8 @@ namespace Auth.Service.DTOs
 
         [Required]
         public string role { get; set; }
+        public string[] events { get; set; }
+
+        public string feedbackStatus { get; set; }
     }
 }

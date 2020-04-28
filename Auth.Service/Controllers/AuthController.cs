@@ -39,7 +39,9 @@ namespace Auth.Service.Controllers
 
             var userToCreate = new User {
                 Username = userForRegisterDto.username,
-                Role = userForRegisterDto.role
+                Role = userForRegisterDto.role,
+                Events = userForRegisterDto.events,
+                FeedbackStatus = userForRegisterDto.feedbackStatus
             };
 
             var createdUser = _repo.Register(userToCreate, userForRegisterDto.password);
@@ -57,7 +59,7 @@ namespace Auth.Service.Controllers
 
             //Token Generation
             var claims = new[] {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userFromRepo.id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username)
             };
 
@@ -81,13 +83,33 @@ namespace Auth.Service.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return Ok(new {
-                id = userFromRepo.Id,
+                id = userFromRepo.id,
                 username = userFromRepo.Username,
                 role = userFromRepo.Role,
+                events = userFromRepo.Events,
+                feedbackStatus = userFromRepo.FeedbackStatus,
                 //The token is writen into the request using the token handler
                 token = tokenHandler.WriteToken(token),
                 tokenExpirationDate = tokenDescriptor.Expires
             });
+        }
+
+        public async Task<IActionResult> Put(UserForUpdateDto userForUpdateDto) {
+            //var user = userForUpdateDto;
+
+            var user = await _repo.UpdateUserDetails(userForUpdateDto);
+
+            if (user == null)
+                return StatusCode(201);
+
+            return StatusCode(201);
+        }
+
+        [HttpGet("getAllUsers")]
+        public async Task<IActionResult> Get() {
+            var users = await _repo.GetAllUsers();
+
+            return Ok(users);
         }
     }
 }

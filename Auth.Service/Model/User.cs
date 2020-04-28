@@ -10,6 +10,8 @@ namespace Auth.Service.Model
     {
         [JsonProperty(PropertyName = "Id")]
         public string Id { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public string id { get; set; }
 
         [JsonProperty(PropertyName = "Username")]
         public string Username { get; set; }
@@ -22,5 +24,11 @@ namespace Auth.Service.Model
 
         [JsonProperty(PropertyName = "Role")]
         public string Role { get; set; }
+
+        [JsonProperty(PropertyName = "Events")]
+        public string[] Events { get; set; }
+
+        [JsonProperty(PropertyName = "FeedbackStatus")]
+        public string FeedbackStatus { get; set; }
     }
 }
