@@ -14,12 +14,10 @@ namespace Auth.Service.Repository
     {
 
         private readonly string Endpoint = "https://localhost:8081";
-        //private readonly string Endpoint = "https://fms.documents.azure.com:443/";
 
         //"https://mysql-cosmosdb-demo.documents.azure.com:443/";
 
         private readonly string Key = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-        //private readonly string Key = "IprS4bolrEgP4icg5lZXoHqsQqSl9Lk3447g8IMHHlVyDFKblrmVxlHlVgldFYmkUMbuVpOWhLKfUUs4weIp0Q==";
         //"38sGL3bA3URjoSxjLqiNtMnz5Lp3TcMzoMvU7dgGvLVsTdOOd84PFP3irnluOzxql7x4PklUbpNR7yZH7dx4kw==";
         private readonly string DatabaseId = "EventsDB";//"AuthDB";
         private readonly string CollectionId = "Users";
